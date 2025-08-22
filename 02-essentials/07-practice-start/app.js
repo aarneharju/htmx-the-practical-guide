@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
       <main>
         <h1>Manage your course goals</h1>
         <section>
-          <form id="goal-form">
+          <form id="goal-form" hx-post="/goals" hx-target="#goals" hx-swap="outerHTML">
             <div>
               <label htmlFor="goal">Goal</label>
               <input type="text" id="goal" name="goal" />
@@ -40,6 +40,7 @@ app.get('/', (req, res) => {
             </li>
           `
           )}
+          <li>test</li>
           </ul>
         </section>
       </main>
@@ -47,5 +48,27 @@ app.get('/', (req, res) => {
   </html>
   `);
 });
+
+app.post('/goals', (req, res) => {
+  // console.log(req);
+  const newGoal = req.body.goal;
+  courseGoals.unshift(newGoal);
+  res.send(
+    `
+    <ul id="goals">
+      ${courseGoals.map(
+        (goal, index) =>
+        `
+        <li id="goal-${index}">
+          <span>${goal}</span>
+          <button>Remove</button>
+        </li>
+        `
+      ).join('')}
+      <li>test</li>
+    </ul>
+    `
+  )
+})
 
 app.listen(3000);
